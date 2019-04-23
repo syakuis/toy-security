@@ -5,6 +5,7 @@ buildscript {
         appGroup = "org.syaku.toy"
         appVersion = "1.0.0.BUILD-SNAPSHOT"
         springVersion = "5.1.5.RELEASE"
+        springSecurityVersion = "5.1.5.RELEASE"
         springBootVersion = "2.1.2.RELEASE"
         lombokVersion = "1.18.2"
         restDocsVersion = "2.0.3.RELEASE"
@@ -75,6 +76,7 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
 
     compileOnly "com.h2database:h2:1.4.191"
+    testCompile "com.h2database:h2:1.4.191"
     // https://mariadb.com/kb/en/library/about-mariadb-connector-j/
     compile "org.mariadb.jdbc:mariadb-java-client:2.3.0"
 
@@ -82,8 +84,9 @@ dependencies {
     testCompile "org.springframework.restdocs:spring-restdocs-mockmvc:${restDocsVersion}"
 
     compile "org.springframework.security.oauth:spring-security-oauth2:2.3.5.RELEASE"
-    compile "org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.1.4.RELEASE"
-    compile "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
+    compile "org.springframework.security:spring-security-jwt:1.0.10.RELEASE"
+//    compile "org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.1.4.RELEASE"
+//    compile "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
 
     // commons library
     testCompile "junit:junit:4.12"
