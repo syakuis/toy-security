@@ -1,17 +1,20 @@
 package org.syaku.toy.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -28,10 +31,9 @@ public class AccessTokenTest {
 
     @Test
     public void 토큰요청() throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "password");
-//        params.put("client_id", clientId);
+        params.add("client_id", "bar");
         params.add("username", "test");
         params.add("password", "1234");
 
@@ -41,5 +43,37 @@ public class AccessTokenTest {
             .andExpect(status().isOk())
             .andDo(print());
 
+    }
+
+    private String obtainAccessToken(String username, String password) throws Exception {
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("grant_type", "password");
+        params.add("client_id", "bar");
+        params.add("username", username);
+        params.add("password", password);
+
+        ResultActions result = this.mvc.perform(post("/oauth/token")
+            .params(params)
+            .with(httpBasic("bar","foo"))
+            .accept(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(status().isOk());
+
+        String resultString = result.andReturn().getResponse().getContentAsString();
+
+        JacksonJsonParser jsonParser = new JacksonJsonParser();
+        return jsonParser.parseMap(resultString).get("access_token").toString();
+    }
+
+    @Test
+    public void 요청() throws Exception {
+        this.mvc.perform(get("/hello")).andExpect(status().is4xxClientError()).andDo(print());
+    }
+
+    @Test
+    public void 요청_인증() throws Exception {
+        this.mvc.perform(get("/hello")
+            .header("Authorization", "Bearer " + obtainAccessToken("test", "1234")))
+            .andExpect(status().isOk());
     }
 }
