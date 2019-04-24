@@ -49,7 +49,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         clients.inMemory()
             .withClient("bar")
             .authorizedGrantTypes("password")
-            .authorities("ROLE_USER")
             .scopes("read", "write")
             .resourceIds(resourceId)
             .accessTokenValiditySeconds(3600)

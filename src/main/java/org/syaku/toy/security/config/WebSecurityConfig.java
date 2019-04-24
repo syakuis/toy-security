@@ -49,7 +49,7 @@ public class WebSecurityConfig {
         protected void configure(AuthenticationManagerBuilder auth) throws Exception {
             // PasswordEncoder 공유하기 위한 설정
             auth.inMemoryAuthentication()
-                .withUser("test").password("1234").roles("USER");
+                .withUser("test").password("1234").roles("ADMIN", "USER");
 
         }
 
@@ -64,7 +64,7 @@ public class WebSecurityConfig {
         public void configure(HttpSecurity http) throws Exception {
             http
                 .authorizeRequests()
-                .antMatchers("/hello/**").hasRole("USER")
+                .antMatchers("/basic/**").hasRole("USER")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

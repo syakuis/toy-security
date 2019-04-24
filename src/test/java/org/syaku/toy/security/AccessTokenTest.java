@@ -69,12 +69,12 @@ public class AccessTokenTest {
 
     @Test
     public void 요청() throws Exception {
-        this.mvc.perform(get("/hello")).andExpect(status().is4xxClientError()).andDo(print());
+        this.mvc.perform(get("/auth")).andExpect(status().is4xxClientError()).andDo(print());
     }
 
     @Test
     public void 요청_인증() throws Exception {
-        this.mvc.perform(get("/hello")
+        this.mvc.perform(get("/auth")
             .header("Authorization", "Bearer " + obtainAccessToken("test", "1234")))
             .andExpect(status().isOk());
     }
