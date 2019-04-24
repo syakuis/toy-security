@@ -45,6 +45,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+        // jwt 서버의 사용자 계정
         clients.inMemory()
             .withClient("bar")
             .authorizedGrantTypes("password")

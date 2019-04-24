@@ -62,8 +62,13 @@ public class WebSecurityConfig {
 
         @Override
         public void configure(HttpSecurity http) throws Exception {
-            http.authorizeRequests()
-                .antMatchers("/hello/**").hasRole("USER");
+            http
+                .authorizeRequests()
+                .antMatchers("/hello/**").hasRole("USER")
+                .anyRequest().authenticated()
+                .and()
+                .formLogin()
+                .loginPage("/login").permitAll();
         }
     }
 }
