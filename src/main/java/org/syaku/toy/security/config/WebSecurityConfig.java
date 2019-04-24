@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -21,9 +22,14 @@ public class WebSecurityConfig {
     // There is no PasswordEncoder mapped for the id "null"
     // okay https://stackoverflow.com/questions/46999940/spring-boot-how-to-specify-the-passwordencoder
     // https://www.mkyong.com/spring-boot/spring-security-there-is-no-passwordencoder-mapped-for-the-id-null/
+//    @Bean
+//    public PasswordEncoder passwordEncoder() {
+//        return NoOpPasswordEncoder.getInstance();
+//    }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
     @Configuration
@@ -45,8 +51,12 @@ public class WebSecurityConfig {
         @Override
         protected void configure(AuthenticationManagerBuilder auth) throws Exception {
             // PasswordEncoder 공유하기 위한 설정
+            // {noop}1234
+            // {noop}1234
             auth.inMemoryAuthentication()
-                .withUser("test").password("1234").roles("ADMIN", "USER");
+                .withUser("test").password("{" + EncodingId.noop + "}1234").roles( "USER")
+                .and()
+                .withUser("admin").password("{" + EncodingId.bcrypt +"}$2a$10$HTFfh/OwE9D8cjp6FP80jOCHnH2o1m0lF5..g7usJ1CzVz84FIBA.").roles("ADMIN", "USER");
 
         }
 

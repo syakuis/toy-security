@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -26,6 +28,8 @@ public class SecurityTest {
 
     @Autowired private MockMvc mvc;
 
+    @Autowired private PasswordEncoder passwordEncoder;
+
     @Test
     public void 로그인() throws Exception {
         this.mvc.perform(post("/login")
@@ -33,7 +37,17 @@ public class SecurityTest {
             .param("username", "test")
             .param("password", "1234")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED))
-            .andExpect(status().is3xxRedirection());
+            .andExpect(MockMvcResultMatchers.redirectedUrl("/"));
+    }
+
+    @Test
+    public void 로그인_암호화() throws Exception {
+        this.mvc.perform(post("/login")
+            .with(csrf())
+            .param("username", "admin")
+            .param("password", "admin")
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+            .andExpect(MockMvcResultMatchers.redirectedUrl("/"));
     }
 
     @Test
