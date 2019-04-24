@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class LoginTest {
+public class SecurityTest {
 
     @Autowired private MockMvc mvc;
 
@@ -39,7 +39,13 @@ public class LoginTest {
     @Test
     @WithMockUser(roles = "USER")
     public void 로그인_인증() throws Exception {
-        this.mvc.perform(get("/basic").with(csrf()))
+        this.mvc.perform(get("/basic"))
             .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    public void 선언적인권한설정() throws Exception {
+        this.mvc.perform(get("/hello")).andExpect(status().isOk());
     }
 }
