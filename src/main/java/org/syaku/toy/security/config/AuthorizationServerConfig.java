@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -16,6 +17,7 @@ import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
 /**
  * AuthorizationServer Spring Security Configuration
@@ -62,8 +64,13 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Bean
     public JwtAccessTokenConverter accessTokenConverter() {
-        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+        /*JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
         converter.setSigningKey("123");
+        return converter;*/
+        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+        KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(
+            new ClassPathResource("toy.jks"), "123456".toCharArray());
+        converter.setKeyPair(keyStoreKeyFactory.getKeyPair("toy"));
         return converter;
     }
 
