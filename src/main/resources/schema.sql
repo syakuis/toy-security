@@ -11,3 +11,23 @@ create table oauth_client_details (
   additional_information VARCHAR(4096),
   autoapprove VARCHAR(256)
 );
+
+create table oauth_access_token (
+token_id VARCHAR(255),
+token bytea,
+authentication_id VARCHAR(255),
+user_name VARCHAR(255),
+client_id VARCHAR(255),
+authentication bytea,
+refresh_token VARCHAR(255)
+);
+
+create table oauth_refresh_token (
+token_id VARCHAR(255),
+token bytea,
+authentication bytea
+);
+
+create table oauth_code (
+code VARCHAR(255), authentication bytea
+);

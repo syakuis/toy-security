@@ -1,5 +1,6 @@
 package org.syaku.toy.security.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,6 +28,12 @@ public class WebSecurityConfig {
 //    public PasswordEncoder passwordEncoder() {
 //        return NoOpPasswordEncoder.getInstance();
 //    }
+    @Value("${app.security.signing-key}")
+    private String signingKey;
+    @Value("${app.security.encoding-strength}")
+    private int encodingStrength;
+    @Value("${app.security.security-realm}")
+    private String securityRealm;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -35,6 +42,8 @@ public class WebSecurityConfig {
 
     @Configuration
     static class Security extends WebSecurityConfigurerAdapter {
+        @Value("${app.security.security-realm}")
+        private String securityRealm;
 
         // 새로 생성하면 생성한 passwordEncoder 사용되지 않고 기본 암호화가 사용된다.
         /*@Bean
@@ -81,6 +90,11 @@ public class WebSecurityConfig {
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                /*.and()
+                .httpBasic()
+                .realmName(securityRealm)*/
+                /*.and()
+                .csrf().disable()*/
                 /*.and()
                 .formLogin()
                 .loginPage("/login").permitAll()*/;
