@@ -47,6 +47,13 @@ public class AccessTokenTest {
 
     }
 
+    /**
+     * curl -u bar:foo http://localhost:8080/oauth/token -d  "grant_type=password&username=test&password=1234"
+     * @param username
+     * @param password
+     * @return
+     * @throws Exception
+     */
     private String obtainAccessToken(String username, String password) throws Exception {
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
@@ -72,6 +79,10 @@ public class AccessTokenTest {
         this.mvc.perform(get("/auth")).andExpect(status().is4xxClientError()).andDo(print());
     }
 
+    /**
+     * curl -H "authorization: bearer AccessToken" http://localhost:8080/auth
+     * @throws Exception
+     */
     @Test
     public void 요청_인증() throws Exception {
         this.mvc.perform(get("/auth")
