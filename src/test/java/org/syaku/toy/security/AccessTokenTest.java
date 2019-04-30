@@ -75,7 +75,7 @@ public class AccessTokenTest {
     }
 
     @Test
-    public void 요청() throws Exception {
+    public void 요청_인증_실패() throws Exception {
         this.mvc.perform(get("/auth")).andExpect(status().is4xxClientError()).andDo(print());
     }
 
@@ -84,7 +84,7 @@ public class AccessTokenTest {
      * @throws Exception
      */
     @Test
-    public void 요청_인증() throws Exception {
+    public void 요청_인증_성공() throws Exception {
         this.mvc.perform(get("/auth")
             .header("Authorization", "Bearer " + obtainAccessToken("test", "1234")))
             .andExpect(status().isOk());

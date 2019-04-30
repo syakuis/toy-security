@@ -13,11 +13,15 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
+
+import javax.sql.DataSource;
 
 /**
  * AuthorizationServer Spring Security Configuration
@@ -45,16 +49,27 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
             .authenticationManager(this.authenticationManager);
     }
 
+    @Bean
+    @Primary
+    public JdbcClientDetailsService JdbcClientDetailsService(DataSource dataSource) {
+        return new JdbcClientDetailsService(dataSource);
+    }
+
+    @Autowired
+    private ClientDetailsService clientDetailsService;
+
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         // jwt 서버의 사용자 계정
-        clients.inMemory()
+        /*clients.inMemory()
             .withClient("bar")
             .authorizedGrantTypes("password")
             .scopes("read", "write")
             .resourceIds(resourceId)
             .accessTokenValiditySeconds(3600)
-            .secret("foo");
+            .secret("foo");*/
+        // db 사용
+        clients.withClientDetails(clientDetailsService);
     }
 
     @Bean
