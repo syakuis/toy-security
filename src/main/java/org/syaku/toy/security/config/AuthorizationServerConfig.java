@@ -77,6 +77,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         return new JwtTokenStore(accessTokenConverter());
     }
 
+    /**
+     * https://www.baeldung.com/spring-security-oauth-jwt
+     * @return
+     */
     @Bean
     public JwtAccessTokenConverter accessTokenConverter() {
         /*JwtAccessTokenConverter converter = new JwtAccessTokenConverter();

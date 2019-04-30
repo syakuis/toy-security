@@ -87,6 +87,6 @@ public class AccessTokenTest {
     public void 요청_인증_성공() throws Exception {
         this.mvc.perform(get("/auth")
             .header("Authorization", "Bearer " + obtainAccessToken("test", "1234")))
-            .andExpect(status().isOk());
+            .andExpect(status().isOk()).andDo(print());
     }
 }
